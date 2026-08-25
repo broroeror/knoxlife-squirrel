@@ -5,7 +5,7 @@
 -- unguarded on line 27. An animal missing from here throws "attempted index:
 -- feather of non-table: null" every time one dies, and the corpse silently
 -- loses BloodQty, leather, head, skeleton and meatRatio. The long version of
--- this note is in KnoxWildlifeFox/.../KWC_FoxParts.lua.
+-- this note is in KnoxLifeFoxes/.../KWC_FoxParts.lua.
 --
 -- Keys are animal type concatenated with breed name, exactly as vanilla builds
 -- them. Half a kilo of animal, so the yield is deliberately small: squirrel was

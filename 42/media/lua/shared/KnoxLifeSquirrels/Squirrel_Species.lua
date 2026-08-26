@@ -39,15 +39,19 @@ local ID = "kwc_squirrel"
 -- reads as the mod being broken out of the box.
 --
 -- So this is now the density the shipped pool can actually deliver:
--- 700 routes x ~2.8 animals per group / 88.83 sq mi = 22.1 per sq mi. Set just
--- under it so Realistic asks for slightly less than the pool holds and passes
--- without a warning.
+-- 700 routes x 2.750 animals per group / 88.83 sq mi = 21.67 per sq mi. Set
+-- just under it so Realistic asks for slightly less than the pool holds and
+-- passes without a warning.
+--
+-- Use the EXACT group size. 22.0 was computed from the 2.8 the planner prints,
+-- which is rounded to one decimal; the real mean is 2.750, and the difference
+-- asked for 711 routes against a pool of 700 -- still capped, by eleven.
 --
 -- ⚠️ This is a DELIVERABLE density, not a biological one. The real figure is in
 -- the first line above and should stay there. If the pool is ever regenerated
 -- larger (tools/gen_routes.py --per-class), raise this to match the new
 -- ceiling rather than reaching back toward 100.
-local DENSITY = 22.0
+local DENSITY = 21.5
 
 -- The animal definitions come from tools/write_definitions.py. If one failed to
 -- load, registering anyway would put a group in the spawn pool whose animal does

@@ -28,8 +28,26 @@ local ID = "kwc_squirrel"
 -- so nothing here competes with any other species or mod. Change it and only
 -- this animal moves.
 --
--- 50 to 200 per square mile in hardwood. The map cannot supply anything like that many territories, so this runs habitat-capped and says so at load.
-local DENSITY = 100.0
+-- Real eastern grey squirrel density is 50-200 per square mile in hardwood, and
+-- an earlier version of this file declared 100 for that reason, accepting that
+-- the route pool would cap it. Running capped turned out to have a consequence
+-- nobody wanted: a species pinned at its ceiling stops responding to the
+-- Wildlife Density dial ENTIRELY. At 100 this asked for 3,230 routes against a
+-- pool of 700, so Quarter, Half, Realistic, 1.5x and Double all delivered the
+-- same 700 -- turning density DOWN could not thin the squirrels either. The
+-- planner also flagged a conflict at the mod's own default settings, which
+-- reads as the mod being broken out of the box.
+--
+-- So this is now the density the shipped pool can actually deliver:
+-- 700 routes x ~2.8 animals per group / 88.83 sq mi = 22.1 per sq mi. Set just
+-- under it so Realistic asks for slightly less than the pool holds and passes
+-- without a warning.
+--
+-- ⚠️ This is a DELIVERABLE density, not a biological one. The real figure is in
+-- the first line above and should stay there. If the pool is ever regenerated
+-- larger (tools/gen_routes.py --per-class), raise this to match the new
+-- ceiling rather than reaching back toward 100.
+local DENSITY = 22.0
 
 -- The animal definitions come from tools/write_definitions.py. If one failed to
 -- load, registering anyway would put a group in the spawn pool whose animal does

@@ -133,7 +133,21 @@ AnimalDefinitions.stages[GROUP] = { stages = {
     [MALE]   = { ageToGrow = 60 },
 } };
 
-local function define(id, src, model, minSize, maxSize, minWeight, maxWeight, male, breeds)
+-- Stage 1 aggression (see tools/write_definitions.py). Data only: whether this
+-- animal can fight, at what range and how often. No targeting lives here, and
+-- nothing scans for a victim -- that is stage 2 of STATUS 7g.
+--
+-- The donor sets NO attack field at all, so without this the animal simply
+-- cannot fight. attackTimer is a cooldown and LOWER IS FASTER; vanilla runs
+-- mouse 1500, sow 2000, hen 3500, ewe 6000, cow 8200. attackDist 0 is vanilla's
+-- way of saying harmless (mouse, rat, chick, turkeypoult).
+--
+-- Babies never fight, matching chick/turkeypoult/mousepups.
+local ADULT_AGGRO = { dist = 0, timer = 1500,
+                      back = false, stressed = false };
+local BABY_AGGRO  = { dist = 0, timer = 4000, back = false, stressed = false };
+
+local function define(id, src, model, minSize, maxSize, minWeight, maxWeight, male, breeds, aggro)
     local a = shallowCopy(src);
     a.bodyModel = model;
     a.breeds    = breeds or AnimalDefinitions.breeds[GROUP].breeds;
@@ -145,6 +159,12 @@ local function define(id, src, model, minSize, maxSize, minWeight, maxWeight, ma
     a.maxWeight = maxWeight;
     a.male      = male or false;
     a.wild      = true;
+    if aggro then
+        a.attackDist       = aggro.dist;
+        a.attackTimer      = aggro.timer;
+        a.attackBack       = aggro.back;
+        a.attackIfStressed = aggro.stressed;
+    end
     -- Designation zones silently domesticate-and-de-wild animals every ~2000
     -- ticks, nulling their migration group. A wild critter must never be
     -- eligible.
@@ -153,8 +173,8 @@ local function define(id, src, model, minSize, maxSize, minWeight, maxWeight, ma
     return a;
 end
 
-define(BABY,   babySrc,  "KWC_SquirrelKit", 0.326, 0.496, 0.05, 0.25, false, babyBreeds);
-define(FEMALE, adultSrc, "KWC_Squirrel", 0.562, 0.627, 0.4, 0.65, false, nil);
+define(BABY,   babySrc,  "KWC_SquirrelKit", 0.326, 0.496, 0.05, 0.25, false, babyBreeds, BABY_AGGRO);
+define(FEMALE, adultSrc, "KWC_Squirrel", 0.562, 0.627, 0.4, 0.65, false, nil, ADULT_AGGRO);
 define(MALE,   adultSrc, "KWC_Squirrel", 0.588, 0.653, 0.42, 0.7, true,  nil);
 
 -- Breeding pairs, and what a newborn is. Set AFTER all three exist so the ids

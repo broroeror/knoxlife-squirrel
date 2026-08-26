@@ -64,6 +64,26 @@ if AnimalDefinitions and AnimalDefinitions.animals
     return
 end
 
+-- The animation set and action group this mod ships under
+--     42/media/AnimSets/kwc_squirrel/  and  42/media/actiongroups/kwc_squirrel/
+--
+-- Both are DORMANT: nothing names them, so the engine never opens either one,
+-- and the actiongroup half is unreachable from a mod in any case. These animals
+-- run on the base-game "mouse" set exactly as before. Declaring the pair here
+-- only tells an optional Java addon what it may switch on once it has patched
+-- ActionGroup.load and VERIFIED the patch took. See KW_AnimSets.lua.
+--
+-- Feature-detected rather than version-gated: registerAnimSet is additive, so
+-- API_VERSION stays 1 and an older core simply skips this.
+if KW.registerAnimSet then
+    KW.registerAnimSet("kwc_squirrel", {
+        animset  = "kwc_squirrel",
+        fallback = "mouse",
+        stages   = { "kwc_squirrelkit", "kwc_squirrelfemale", "kwc_squirrelmale" },
+        attack   = false,   -- PREY NEVER STRIKES -- no attack state is shipped for this one
+    })
+end
+
 if KW.registerSpecies(ID, {
     female = "kwc_squirrelfemale", male = "kwc_squirrelmale", baby = "kwc_squirrelkit",
     possibleBreed = "default",
